@@ -19,6 +19,7 @@ namespace PracticeAlgorims
             //Передача пути и имени файла
             StreamReader text = new StreamReader("E:\\STUDY\\University\\Второе высшее\\4й курс\\Структуры и алгоритмы обработки данных\\spiski_smeznosti1.txt");
             //чтение первой строки
+            Console.WriteLine("Вывод списков смежности из файла: ");
             line = text.ReadLine();
             //Продолжение чтения строк до окончания файла
             while (line != null)
@@ -33,67 +34,42 @@ namespace PracticeAlgorims
             text.Close();
             Console.WriteLine("Количество вершин в графе равно {0}", numVertices);
 
-
             //Инициализация массива смежности и запись данных в массив
             int[,] graph = new int[numVertices, numVertices];
-            int indexList = 0;
-            Console.WriteLine("Массив по умолчанию: ");
-            for (int i = 0; i < numVertices; i++)
-            {
-                for (int j = 0; j < numVertices; j++)
-                {
-                    if (indexList == 0)
-                    {
-                        graph[i, j] = 0;
-                    }
-                    else { graph[i, j] = 1; }
-
-                    Console.Write("{0} ", graph[i, j]);
-                }
-                Console.WriteLine();
-            }
-
-
             //Передача пути и имени файла
             StreamReader text1 = new StreamReader("E:\\STUDY\\University\\Второе высшее\\4й курс\\Структуры и алгоритмы обработки данных\\spiski_smeznosti1.txt");
             line = text1.ReadLine();
             //чтение первой строки
             int iteration = 0;
             int indexFromList = 0;
-            Console.WriteLine("Массив c изменениями: ");
+            Console.WriteLine();
+            Console.WriteLine("Массив смежности: ");
             while (iteration != numVertices)
             {
                 for (int a = 0 + iteration; a < numVertices; a++)
                 {
-                    Console.WriteLine("line = " + line);
                     string basic_words = line;
                     char ch = '=';
                     int indexOfChar = basic_words.IndexOf(ch);
                     string discarded = basic_words.Substring(0, indexOfChar); // то что до "=" хранится здесь и откидывается
                     string words = basic_words.Substring(indexOfChar + 1); // то что после "=" хранится здесь и нужно для дальнейшей работы, с ","
-                    Console.WriteLine("words = " + words);
                     string[] slovo = words.Split(new char[] { ',' });
-
                     for (int b = 0; b < numVertices; b++)
                     {
-                        Console.WriteLine("Цикл {0}, столбик {1}", a, b);
                         foreach (string s in slovo)
                         {
                             indexFromList = Int32.Parse(s);
-                            Console.WriteLine("s = " + s);
-                            Console.WriteLine("indexFromList = ", indexFromList);
-
-                            if (indexFromList == 0)
+                            if (indexFromList != -1)
                             {
-                                graph[a, b] = 0;
+                                graph[a, indexFromList] = 1;
                             }
                             else
                             {
-                                graph[a, b] = 1;
+                                graph[a, b] = 0;
                             }
                         }
-                        Console.Write("{0} ", graph[a, b]);
-                        b = b + 1;
+                        Console.Write(graph[a, b] + " ");
+                        indexFromList = -1;
                     }
                     Console.WriteLine();
                     line = text1.ReadLine();
@@ -102,8 +78,44 @@ namespace PracticeAlgorims
             }
             //закрытие файла
             text1.Close();
+            int sumEdges = 0;
+            int count = 0;
+            for (int c = 0; c < numVertices ; c++)
+            {
+                if (graph[c, c] == 1)
+                {
+                    numloops = numloops + 1; // счет количества петель
+                }
+
+                for (int d = 0; d < numVertices ; d++)
+                {
+
+                    if (graph[c, d] != 0)
+                    {
+                        numEdges = numEdges + 1; //счет количества ребер
+                    }
+                    sumEdges = sumEdges + graph[c, d]; // счет ребер в пределах строки
+                }
+                if (sumEdges == 0)
+                {
+                    count += 1; // поиск изолированных вершин
+                }
+            }
+            numEdges = numEdges / 2 + numloops;
+            Console.WriteLine("Количество ребер в графе равно {0}, количество петель равно {1}", numEdges, numloops);
+            if (count == 0)
+            {
+                Console.WriteLine("Изолированных вершин нет");
+            }
+            else
+            {
+                Console.WriteLine("Количество изолированных вершин в графе {0}", count);
+            }
+
+
+            Console.WriteLine("Список степеней вершин в порядке убывания: ");
             Console.ReadLine();
-        }
+        } 
     }
 }
 
