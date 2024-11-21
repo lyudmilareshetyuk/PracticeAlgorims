@@ -80,6 +80,7 @@ namespace PracticeAlgorims
             text1.Close();
             int sumEdges = 0;
             int count = 0;
+            int[] stepsort = new int[numVertices]; 
             for (int c = 0; c < numVertices ; c++)
             {
                 if (graph[c, c] == 1)
@@ -95,11 +96,13 @@ namespace PracticeAlgorims
                         numEdges = numEdges + 1; //счет количества ребер
                     }
                     sumEdges = sumEdges + graph[c, d]; // счет ребер в пределах строки
+                    stepsort[c] = sumEdges;
                 }
                 if (sumEdges == 0)
                 {
                     count += 1; // поиск изолированных вершин
                 }
+                sumEdges = 0;
             }
             numEdges = numEdges / 2 + numloops;
             Console.WriteLine("Количество ребер в графе равно {0}, количество петель равно {1}", numEdges, numloops);
@@ -111,9 +114,14 @@ namespace PracticeAlgorims
             {
                 Console.WriteLine("Количество изолированных вершин в графе {0}", count);
             }
-
-
-            Console.WriteLine("Список степеней вершин в порядке убывания: ");
+            Console.Write("Список степеней вершин в порядке убывания: ");
+            var orderedForDescending = from v in stepsort
+                                 orderby v descending
+                                 select v;
+            foreach (int v in orderedForDescending)
+            {
+                Console.Write(v + " ");
+            }
             Console.ReadLine();
         } 
     }
